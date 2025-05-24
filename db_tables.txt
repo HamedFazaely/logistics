@@ -1,0 +1,39 @@
+create database if not exists logistics;
+create table if not exists customers (
+     id bigint not null primary key auto_increment,
+     first_name varchar(100) not null,
+     lat_name varchar(100) not null,
+     email varchar(100) not null,
+     created_at timestamp not null default now(),
+     updated_at timestamp not null default now() on update now()
+     );
+
+
+create table if not exists providers ( id bigint not null primary key auto_increment, name varchar(50) not
+null, status_endpoint varchar(200) not null, pickup_endpoint varchar(200) not null, created_at timestamp not null
+default now(), updated_at timestamp not null default now() on update now() );
+
+create table if not exists orders (
+id bigint not null primary key auto_increment,
+customer_id bigint not null,
+s_phone char(10) not null,
+r_phone char(10) not null,
+status char(1) not null default '0',
+pickup_sms_sent boolean not null default 0,
+pickup_time timestamp null,
+delivery_time timestamp null,
+address varchar(500) not null,
+provider_id bigint not null,
+created_at timestamp not null default now(),
+updated_at timestamp not null default now() on update now(),
+index cust_id (customer_id),
+foreign key (customer_id) references customers(id),
+index prov_id (provider_id),
+foreign key (provider_id) references providers(id)
+);
+
+create user 'hamed'@'localhost' identified by 'hamed1984';
+create user 'hamed'@'%' identified by 'hamed1984';
+grant all privileges on logistics.* to 'hamed'@'localhost';
+grant all privileges on logistics.* to 'hamed'@'%';
+flush privileges;
